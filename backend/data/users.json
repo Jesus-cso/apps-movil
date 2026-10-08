@@ -28,5 +28,15 @@
         "username": "maria",
         "password": "maria123",
         "role": "DOCTOR"
+    },
+    {
+        "username": "prueba",
+        "password": "1234",
+        "role": "CLIENTE"
+    },
+    {
+        "username": "Jesus",
+        "password": "1234",
+        "role": "CLIENTE"
     }
 ]

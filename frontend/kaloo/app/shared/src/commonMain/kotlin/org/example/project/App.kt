@@ -1,48 +1,41 @@
 package org.example.project
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.resources.painterResource
-
-import kotlinproject.app.shared.generated.resources.Res
-import kotlinproject.app.shared.generated.resources.compose_multiplatform
+import org.example.project.data.AuthApi
+import org.example.project.data.baseUrl
+import org.example.project.data.createHttpClient
 
 @Composable
-@Preview
 fun App() {
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
+        val api = remember { AuthApi(createHttpClient(), baseUrl) }
+        var screen by remember { mutableStateOf<Screen>(Screen.Inicio) }
+
+        Surface(Modifier.fillMaxSize()) {
+            when (val s = screen) {
+                Screen.Inicio -> InicioScreen(
+                    onLogin = { screen = Screen.Login },
+                    onRegister = { screen = Screen.Register }
+                )
+                Screen.Login -> LoginScreen(
+                    api = api,
+                    onSuccess = { email, role -> screen = Screen.Dashboard(email, role) },
+                    onBack = { screen = Screen.Inicio }
+                )
+                Screen.Register -> RegisterScreen(
+                    api = api,
+                    onSuccess = { screen = Screen.Login },
+                    onBack = { screen = Screen.Inicio }
+                )
+                is Screen.Dashboard -> DashboardScreen(
+                    email = s.email,
+                    role = s.role,
+                    onLogout = { screen = Screen.Inicio }
+                )
             }
         }
     }
