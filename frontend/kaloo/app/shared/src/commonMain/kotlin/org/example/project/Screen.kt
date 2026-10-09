@@ -4,5 +4,7 @@ sealed interface Screen {
     data object Inicio : Screen
     data object Login : Screen
     data object Register : Screen
-    data class Dashboard(val email: String, val role: String?) : Screen
+    data class Admin(val username: String) : Screen
+    data class Instructor(val username: String) : Screen
+    data class Cliente(val username: String) : Screen
 }

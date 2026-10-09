@@ -9,11 +9,20 @@ import org.example.project.data.AuthApi
 import org.example.project.data.baseUrl
 import org.example.project.data.createHttpClient
 
+private fun screenForRole(username: String, role: String?): Screen =
+    when (Role.from(role)) {
+        Role.ADMINISTRADOR -> Screen.Admin(username)
+        Role.INSTRUCTOR -> Screen.Instructor(username)
+        Role.CLIENTE -> Screen.Cliente(username)
+        null -> Screen.Cliente(username) // rol desconocido: vista de menor privilegio
+    }
+
 @Composable
 fun App() {
     MaterialTheme {
         val api = remember { AuthApi(createHttpClient(), baseUrl) }
         var screen by remember { mutableStateOf<Screen>(Screen.Inicio) }
+        val logout = { screen = Screen.Inicio }
 
         Surface(Modifier.fillMaxSize()) {
             when (val s = screen) {
@@ -23,7 +32,7 @@ fun App() {
                 )
                 Screen.Login -> LoginScreen(
                     api = api,
-                    onSuccess = { email, role -> screen = Screen.Dashboard(email, role) },
+                    onSuccess = { username, role -> screen = screenForRole(username, role) },
                     onBack = { screen = Screen.Inicio }
                 )
                 Screen.Register -> RegisterScreen(
@@ -31,11 +40,9 @@ fun App() {
                     onSuccess = { screen = Screen.Login },
                     onBack = { screen = Screen.Inicio }
                 )
-                is Screen.Dashboard -> DashboardScreen(
-                    email = s.email,
-                    role = s.role,
-                    onLogout = { screen = Screen.Inicio }
-                )
+                is Screen.Admin -> AdminScreen(s.username, logout)
+                is Screen.Instructor -> InstructorScreen(s.username, logout)
+                is Screen.Cliente -> ClienteScreen(s.username, logout)
             }
         }
     }

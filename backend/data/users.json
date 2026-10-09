@@ -1,42 +1,8 @@
 [
-    {
-        "username": "admin",
-        "password": "admin123",
-        "role": "ADMINISTRADOR"
-    },
-    {
-        "username": "super",
-        "password": "super123",
-        "role": "SUPERVISOR"
-    },
-    {
-        "username": "cliente",
-        "password": "cli123",
-        "role": "CLIENTE"
-    },
-    {
-        "username": "doctor",
-        "password": "doc123",
-        "role": "DOCTOR"
-    },
-    {
-        "username": "vendedor",
-        "password": "ven123",
-        "role": "VENDEDOR"
-    },
-    {
-        "username": "maria",
-        "password": "maria123",
-        "role": "DOCTOR"
-    },
-    {
-        "username": "prueba",
-        "password": "1234",
-        "role": "CLIENTE"
-    },
-    {
-        "username": "Jesus",
-        "password": "1234",
-        "role": "CLIENTE"
-    }
+    { "username": "admin",      "password": "admin123", "role": "ADMINISTRADOR" },
+    { "username": "instructor", "password": "ins123",   "role": "INSTRUCTOR" },
+    { "username": "cliente",    "password": "cli123",   "role": "CLIENTE" },
+    { "username": "maria",      "password": "maria123", "role": "INSTRUCTOR" },
+    { "username": "prueba",     "password": "1234",     "role": "CLIENTE" },
+    { "username": "Jesus",      "password": "1234",     "role": "CLIENTE" }
 ]

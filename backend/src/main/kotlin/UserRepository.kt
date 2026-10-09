@@ -9,7 +9,8 @@ object UserRepository {
     private val file = File("data/users.json")
     private val lock = Any()
 
-    val registrableRoles = setOf("SUPERVISOR", "CLIENTE", "DOCTOR", "VENDEDOR")
+
+val registrableRoles = setOf("CLIENTE", "INSTRUCTOR")
 
     init {
         if (!file.exists()) {

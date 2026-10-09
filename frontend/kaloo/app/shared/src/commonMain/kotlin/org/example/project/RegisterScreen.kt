@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,6 +16,7 @@ import org.example.project.data.RegisterRequest
 fun RegisterScreen(api: AuthApi, onSuccess: () -> Unit, onBack: () -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var role by remember { mutableStateOf(Role.CLIENTE) }
     var loading by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
@@ -38,6 +40,17 @@ fun RegisterScreen(api: AuthApi, onSuccess: () -> Unit, onBack: () -> Unit) {
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(Modifier.height(16.dp))
+        Text("Tipo de cuenta", style = MaterialTheme.typography.titleSmall)
+        listOf(Role.CLIENTE, Role.INSTRUCTOR).forEach { option ->
+            Row(
+                Modifier.fillMaxWidth().clickable { role = option },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(selected = role == option, onClick = { role = option })
+                Text(option.name.lowercase().replaceFirstChar { it.uppercase() })
+            }
+        }
         error?.let {
             Spacer(Modifier.height(8.dp))
             Text(it, color = MaterialTheme.colorScheme.error)
@@ -50,7 +63,7 @@ fun RegisterScreen(api: AuthApi, onSuccess: () -> Unit, onBack: () -> Unit) {
                 }
                 loading = true; error = null
                 scope.launch {
-                    api.register(RegisterRequest(username.trim(), password))
+                    api.register(RegisterRequest(username.trim(), password, role.name))
                         .onSuccess { onSuccess() }
                         .onFailure { error = it.message ?: "Sin conexión" }
                     loading = false
